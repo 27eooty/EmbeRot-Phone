@@ -52,7 +52,9 @@ body {
 
 /* 顶部区域：时间组件 */
 .top-section {
-    flex: 0.3; /* 占比 30% */
+    flex: 0 0 auto; /* 不再强制占比，由内容和间距决定 */
+    margin-top: 60px; /* 顶部留白 */
+    margin-bottom: 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -62,35 +64,40 @@ body {
 #live-clock { font-size: 80px; font-weight: 200; line-height: 1; } /* 超大号时间 */
 #live-date { font-size: 18px; margin-top: 5px; font-weight: 400; }
 
-/* 中部区域：核心网格 */
+/* 中部区域：核心网格 (Bento Layout) */
 .middle-section {
-    flex: 0.5; /* 占比 50% */
+    flex: 0 0 auto; /* 高度由内容决定，防止拉伸 */
     display: grid;
-    grid-template-columns: 1fr 1fr; /* 左右两列 */
-    gap: 20px;
+    grid-template-columns: 1fr 1fr; /* 左右两列等宽 */
+    gap: 12px; /* 紧凑间距 */
     padding: 0 20px;
     width: 100%;
+    /* 确保左右高度一致 */
+    align-items: stretch;
 }
 
 /* 左侧列：日历组件 */
 .left-column {
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 .calendar-widget {
-    background: rgba(255, 255, 255, 0.2); /* 更通透的白色毛玻璃 */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3); /* 细边框 */
+    background: rgba(255, 255, 255, 0.25); /* 亮色毛玻璃 */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 22px;
-    height: 100%; /* 撑满高度 */
+    height: 100%; /* 撑满高度，与右侧对齐 */
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #fff; /* 改为白色文字以适应深色背景 */
-    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    /* 视觉上接近正方形，由右侧高度决定 */
 }
 
 /* 右侧列：App Grid (2x2) */
@@ -98,7 +105,8 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 15px;
+    gap: 12px; /* 与主 Grid 间距一致 */
+    height: auto; /* 高度由内容撑开 */
 }
 
 /* App 图标通用样式 */
@@ -108,11 +116,11 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    width: 100%; /* 适应网格 */
+    width: 100%;
 }
 .app-icon {
-    width: 64px;
-    height: 64px;
+    width: 60px; /* 稍微调小以适应紧凑布局 */
+    height: 60px;
     border-radius: 18px; /* 圆角矩形 */
     background: #ddd;
     margin-bottom: 6px;
@@ -120,7 +128,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 30px;
+    font-size: 28px;
     color: white;
     transition: transform 0.1s;
 }
