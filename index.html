@@ -21,56 +21,61 @@
 
     <!-- 0. iOS 主屏幕 (入口) -->
     <div id="home-view" class="page active-home">
-        <div class="ios-status-bar">Let's AIRP</div>
-        
-        <div class="clock-area">
+        <!-- 顶部区域：时间组件 -->
+        <div class="top-section">
             <div id="live-clock">12:00</div>
             <div id="live-date">1月1日 星期一</div>
         </div>
 
-        <div class="main-content-area">
-            <div class="widgets-grid">
-                <div class="ios-widget">
-                    <div class="widget-title">状态</div>
-                    <div class="widget-content" style="color: #34c759;">运行中</div>
-                    <div style="font-size:12px; opacity: 0.6;">电量充足</div>
-                </div>
-                <div class="ios-widget">
-                    <div class="widget-title">天气</div>
-                    <div class="widget-content">🌤️ 23°</div>
-                    <div style="font-size:12px; opacity: 0.6;">空气优</div>
+        <!-- 中部区域：核心网格 -->
+        <div class="middle-section">
+            <!-- 左侧列：日历组件 -->
+            <div class="left-column">
+                <div class="calendar-widget">
+                    <div id="cal-month" style="font-size: 18px; opacity: 0.8;">1月</div>
+                    <div id="cal-day" style="font-size: 48px; font-weight: 600;">1</div>
+                    <div id="cal-weekday" style="font-size: 16px; opacity: 0.8;">星期一</div>
                 </div>
             </div>
 
-            <div class="apps-row">
+            <!-- 右侧列：App Grid (2x2) -->
+            <div class="right-column app-grid">
+                <!-- 1. 信息 (Chat) -->
                 <div class="app-item" onclick="MapsTo('app-main')">
                     <div class="app-icon icon-message">💬</div>
-                    <span class="app-label">AIRP</span>
+                    <span class="app-label">信息</span>
                 </div>
+                <!-- 2. 音乐 (Music) -->
                 <div class="app-item">
-                    <div class="app-icon icon-placeholder1">📷</div>
-                    <span class="app-label">相册</span>
-                </div>
-                <div class="app-item">
-                    <div class="app-icon icon-placeholder2">🎵</div>
+                    <div class="app-icon icon-music">🎵</div>
                     <span class="app-label">音乐</span>
                 </div>
+                <!-- 3. 相机 (Camera) -->
                 <div class="app-item">
-                    <div class="app-icon icon-placeholder3">🗺️</div>
+                    <div class="app-icon icon-camera">📷</div>
+                    <span class="app-label">相机</span>
+                </div>
+                <!-- 4. 地图 (Map) -->
+                <div class="app-item">
+                    <div class="app-icon icon-map">🗺️</div>
                     <span class="app-label">地图</span>
                 </div>
             </div>
         </div>
 
+        <!-- 底部区域：Dock 栏 -->
         <div class="dock-container">
             <div class="ios-dock">
+                <!-- 主题 (Theme) -->
                 <div class="app-item">
-                    <div class="app-icon" style="background: #39b54a;">📞</div>
+                    <div class="app-icon icon-theme">🎨</div>
                 </div>
+                <!-- 世界书 (World Book) -->
                 <div class="app-item" onclick="MapsTo('world-book')">
-                    <div class="app-icon" style="background: #007aff;">🌐</div>
+                    <div class="app-icon icon-worldbook">🌐</div>
                 </div>
-                 <div class="app-item" onclick="MapsTo('settings')">
+                <!-- 设置 (Settings) -->
+                <div class="app-item" onclick="MapsTo('settings')">
                     <div class="app-icon icon-settings">⚙️</div>
                 </div>
             </div>

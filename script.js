@@ -83,11 +83,23 @@ function updateClock() {
     const clockEl = document.getElementById('live-clock');
     const dateEl = document.getElementById('live-date');
     
+    // 更新顶部时间
     if (clockEl) clockEl.innerText = `${hours}:${minutes}`;
-    
     if (dateEl) {
         const options = { month: 'long', day: 'numeric', weekday: 'long' };
         dateEl.innerText = now.toLocaleDateString('zh-CN', options);
+    }
+
+    // 更新日历组件
+    const calMonth = document.getElementById('cal-month');
+    const calDay = document.getElementById('cal-day');
+    const calWeekday = document.getElementById('cal-weekday');
+
+    if (calMonth && calDay && calWeekday) {
+        calMonth.innerText = `${now.getMonth() + 1}月`;
+        calDay.innerText = now.getDate();
+        const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+        calWeekday.innerText = weekdays[now.getDay()];
     }
 }
 setInterval(updateClock, 1000); // 每秒刷新
