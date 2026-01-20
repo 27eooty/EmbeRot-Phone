@@ -222,6 +222,20 @@
                 <div id="token-count-display">预计发送：约 0 Tokens</div>
             </div>
 
+            <!-- 界面显示设置 (新增) -->
+            <div class="settings-group-title" style="margin: 0 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">界面显示</div>
+            <div class="settings-group">
+                <div class="input-row">
+                    <label>时间戳显示方式</label>
+                    <select id="setting-timestamp-mode">
+                        <option value="none">不显示 (None)</option>
+                        <option value="smart">每隔5分钟 (Time Separator)</option>
+                        <option value="every">每条气泡旁 (Every Bubble)</option>
+                        <option value="last">每轮对话结尾 (End of Round)</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="settings-group">
                 <div class="input-row">
                     <label>角色名称</label>
@@ -319,20 +333,6 @@
 
         <div class="settings-container">
             
-            <!-- 区域一：界面设置 -->
-            <div class="settings-group-title" style="margin: 20px 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">界面设置 (UI Settings)</div>
-            <div class="settings-group">
-                <div class="input-row">
-                    <label>聊天时间戳显示 (Timestamp Display)</label>
-                    <select id="setting-timestamp-mode">
-                        <option value="none">不显示 (Hidden)</option>
-                        <option value="smart">智能间隔 (Smart - >5min)</option>
-                        <option value="every">每条都显示 (Always)</option>
-                        <option value="last">仅显示最后一条 (Last Only)</option>
-                    </select>
-                </div>
-            </div>
-
             <!-- 区域二：连接设置 -->
             <div class="settings-group-title" style="margin: 20px 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">连接设置 (API Settings)</div>
             <div class="settings-group">

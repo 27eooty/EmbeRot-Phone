@@ -637,12 +637,12 @@ function startChat(characterId) {
         // 3. 自动注入开场白
         // 如果角色有 firstMes，且 messages 为空，则注入
         // 注意：这里我们直接注入到 messages 数组中
-        if (char.firstMes) {
-            newSession.messages.push({ role: "assistant", content: char.firstMes });
-        } else {
-            // 默认开场白
-            newSession.messages.push({ role: "assistant", content: "现在我们已经是好友啦，开始聊天吧！" });
-        }
+        const initialMsg = char.firstMes || "现在我们已经是好友啦，开始聊天吧！";
+        newSession.messages.push({ 
+            role: "assistant", 
+            content: initialMsg,
+            timestamp: Date.now() 
+        });
 
         chatSessions[newSessionId] = newSession;
         saveData();
@@ -688,9 +688,54 @@ function renderChatWindow() {
     
     if (!currentChatId || !chatSessions[currentChatId]) return;
     const session = chatSessions[currentChatId];
+    const mode = userSettings.timestampMode || 'smart';
+
+    let lastTime = 0;
 
     session.messages.forEach((msg, index) => {
-        const el = createMessageElement(msg.content, msg.role === 'user' ? 'user' : 'ai', index);
+        const msgTime = msg.timestamp || 0;
+        
+        // 模式 B: 每隔5分钟 (Time Separator)
+        if ((mode === 'smart' || mode === 'separator') && msgTime > 0) {
+            // 如果是第一条消息，或者与上一条间隔超过5分钟 (300000ms)
+            if (index === 0 || (msgTime - lastTime > 5 * 60 * 1000)) {
+                const date = new Date(msgTime);
+                const timeStr = `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+                
+                // 如果跨天，显示日期
+                const now = new Date();
+                let displayStr = timeStr;
+                if (date.toDateString() !== now.toDateString()) {
+                    displayStr = `${date.getMonth() + 1}/${date.getDate()} ${timeStr}`;
+                }
+
+                const sep = document.createElement('div');
+                sep.className = 'time-separator';
+                sep.innerText = displayStr;
+                chatWindow.appendChild(sep);
+            }
+        }
+        lastTime = msgTime;
+
+        // 计算气泡旁时间戳 (模式 C & D)
+        let showBubbleTs = false;
+        if (mode === 'every') {
+            showBubbleTs = true;
+        } else if (mode === 'last' || mode === 'end_of_round') {
+            const nextMsg = session.messages[index + 1];
+            // 如果是最后一条，或者下一条角色不同
+            if (!nextMsg || nextMsg.role !== msg.role) {
+                showBubbleTs = true;
+            }
+        }
+
+        let timeText = "";
+        if (showBubbleTs) {
+            const date = new Date(msgTime || Date.now());
+            timeText = `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+        }
+
+        const el = createMessageElement(msg.content, msg.role === 'user' ? 'user' : 'ai', index, { show: showBubbleTs, text: timeText });
         chatWindow.appendChild(el);
     });
     
@@ -698,7 +743,7 @@ function renderChatWindow() {
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-function createMessageElement(text, role, index) {
+function createMessageElement(text, role, index, timestampInfo = null) {
     const session = chatSessions[currentChatId];
     const char = characters[session.characterId];
     
@@ -746,6 +791,14 @@ function createMessageElement(text, role, index) {
     bubble.className = 'message-bubble';
     bubble.innerText = text;
 
+    // 时间戳 (模式 C & D)
+    if (timestampInfo && timestampInfo.show) {
+        const ts = document.createElement('div');
+        ts.className = 'chat-timestamp';
+        ts.innerText = timestampInfo.text;
+        bubble.appendChild(ts);
+    }
+
     // 组装
     // 顺序：Checkbox -> (Avatar + Bubble)
     // Flex 布局会处理 Avatar 和 Bubble 的左右关系
@@ -766,18 +819,22 @@ function createMessageElement(text, role, index) {
 
 function addMessageToUI(text, role) {
     const chatWindow = document.getElementById('chat-window');
-    // 获取当前消息索引 (假设是最后一条)
-    // 注意：流式输出时，如果是同一条消息的分段，这里逻辑会有点问题。
-    // 但目前的 callLLM 是分段 push 到 messages 数组的，所以每段都是一条新消息。
-    // 索引就是当前的 length
+    // 获取当前消息索引
     let index = 0;
     if (currentChatId && chatSessions[currentChatId]) {
         index = chatSessions[currentChatId].messages.length; 
-        // 如果还没 push 进去，index 就是 length。如果已经 push 了，index 是 length - 1。
-        // callLLM 中是先 addMessageToUI 再 push。所以这里 index 应该是 length。
     }
     
-    const el = createMessageElement(text, role, index);
+    // 计算时间戳显示
+    const mode = userSettings.timestampMode || 'smart';
+    let showTimestamp = false;
+    if (mode === 'every' || mode === 'last' || mode === 'end_of_round') {
+        showTimestamp = true; // 新消息总是当前最后一条
+    }
+    const now = new Date();
+    const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const el = createMessageElement(text, role, index, { show: showTimestamp, text: timeStr });
     chatWindow.appendChild(el);
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
@@ -1143,10 +1200,16 @@ function loadChatSettings() {
     const nameInput = document.getElementById('setting-charname');
     const promptInput = document.getElementById('setting-prompt');
     const firstMesInput = document.getElementById('setting-firstmes');
+    const timestampSelect = document.getElementById('setting-timestamp-mode');
 
     nameInput.value = char.name;
     promptInput.value = char.prompt;
     firstMesInput.value = char.firstMes;
+    
+    // 加载时间戳设置
+    if (timestampSelect) {
+        timestampSelect.value = userSettings.timestampMode || 'smart';
+    }
 
     // 渲染世界书挂载列表
     renderWorldBookMount();
@@ -1395,6 +1458,12 @@ function saveChatSettings() {
     char.prompt = document.getElementById('setting-prompt').value.trim();
     char.firstMes = document.getElementById('setting-firstmes').value.trim();
     
+    // 更新时间戳设置
+    const timestampSelect = document.getElementById('setting-timestamp-mode');
+    if (timestampSelect) {
+        userSettings.timestampMode = timestampSelect.value;
+    }
+    
     // 更新头像
     const avatarEl = document.getElementById('setting-char-avatar');
     if (avatarEl.dataset.base64) {
@@ -1417,6 +1486,8 @@ function saveChatSettings() {
     }
 
     saveData();
+    // 立即刷新聊天界面以应用新设置
+    renderChatWindow();
     alert('设置已保存');
     MapsTo('chat-room');
 }
@@ -2360,3 +2431,176 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- 聊天界面逻辑 ---
+function loadCurrentChat() {
+    if (!currentChatId || !chatSessions[currentChatId]) return;
+    const session = chatSessions[currentChatId];
+    const char = characters[session.characterId];
+    
+    document.getElementById('header-title').innerText = char ? char.name : "未知角色";
+    
+    // 重置批量模式状态
+    isMessageBatchMode = false;
+    selectedMessages.clear();
+    updateChatBatchUI();
+
+    renderChatWindow();
+}
+
+function renderChatWindow() {
+    const chatWindow = document.getElementById('chat-window');
+    chatWindow.innerHTML = '';
+    
+    if (!currentChatId || !chatSessions[currentChatId]) return;
+    const session = chatSessions[currentChatId];
+    const mode = userSettings.timestampMode || 'smart';
+
+    let lastTime = 0;
+
+    session.messages.forEach((msg, index) => {
+        const msgTime = msg.timestamp || 0;
+        
+        // 模式 B: 每隔5分钟 (Time Separator)
+        if ((mode === 'smart' || mode === 'separator') && msgTime > 0) {
+            // 如果是第一条消息，或者与上一条间隔超过5分钟 (300000ms)
+            if (index === 0 || (msgTime - lastTime > 5 * 60 * 1000)) {
+                const date = new Date(msgTime);
+                const timeStr = `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+                
+                // 如果跨天，显示日期
+                const now = new Date();
+                let displayStr = timeStr;
+                if (date.toDateString() !== now.toDateString()) {
+                    displayStr = `${date.getMonth() + 1}/${date.getDate()} ${timeStr}`;
+                }
+
+                const sep = document.createElement('div');
+                sep.className = 'time-separator';
+                sep.innerText = displayStr;
+                chatWindow.appendChild(sep);
+            }
+        }
+        lastTime = msgTime;
+
+        // 计算气泡旁时间戳 (模式 C & D)
+        let showBubbleTs = false;
+        if (mode === 'every') {
+            showBubbleTs = true;
+        } else if (mode === 'last' || mode === 'end_of_round') {
+            const nextMsg = session.messages[index + 1];
+            // 如果是最后一条，或者下一条角色不同
+            if (!nextMsg || nextMsg.role !== msg.role) {
+                showBubbleTs = true;
+            }
+        }
+
+        let timeText = "";
+        if (showBubbleTs) {
+            const date = new Date(msgTime || Date.now());
+            timeText = `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+        }
+
+        const el = createMessageElement(msg.content, msg.role === 'user' ? 'user' : 'ai', index, { show: showBubbleTs, text: timeText });
+        chatWindow.appendChild(el);
+    });
+    
+    // 滚动到底部
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function createMessageElement(text, role, index, timestampInfo = null) {
+    const session = chatSessions[currentChatId];
+    const char = characters[session.characterId];
+    
+    // 获取头像
+    let avatarUrl = "";
+    if (role === 'ai') {
+        avatarUrl = char.avatar || ""; 
+    } else {
+        // User 头像
+        const currentPersona = userPersonas.find(p => p.id === currentPersonaId);
+        avatarUrl = currentPersona ? currentPersona.userAvatar : "";
+    }
+
+    const row = document.createElement('div');
+    row.className = `message-row ${role}`;
+    
+    // 批量模式下的 Checkbox
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'msg-checkbox';
+    checkbox.checked = selectedMessages.has(index);
+    checkbox.onclick = (e) => {
+        e.stopPropagation();
+        handleMessageSelect(index, checkbox.checked);
+    };
+    
+    // 头像元素
+    const avatar = document.createElement('div');
+    avatar.className = 'message-avatar-img';
+    if (avatarUrl) {
+        avatar.style.backgroundImage = `url(${avatarUrl})`;
+    } else {
+        // 默认头像
+        avatar.style.display = 'flex';
+        avatar.style.justifyContent = 'center';
+        avatar.style.alignItems = 'center';
+        avatar.style.fontSize = '14px';
+        avatar.style.color = '#fff';
+        avatar.innerText = role === 'ai' ? (char.name[0] || 'A') : 'U';
+        avatar.style.backgroundColor = role === 'ai' ? '#ccc' : '#007aff';
+    }
+
+    // 气泡元素
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble';
+    bubble.innerText = text;
+
+    // 时间戳 (模式 C & D)
+    if (timestampInfo && timestampInfo.show) {
+        const ts = document.createElement('div');
+        ts.className = 'chat-timestamp';
+        ts.innerText = timestampInfo.text;
+        bubble.appendChild(ts);
+    }
+
+    // 组装
+    // 顺序：Checkbox -> (Avatar + Bubble)
+    // Flex 布局会处理 Avatar 和 Bubble 的左右关系
+    row.appendChild(checkbox);
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+
+    // 行点击事件 (批量模式下)
+    row.onclick = () => {
+        if (isMessageBatchMode) {
+            checkbox.checked = !checkbox.checked;
+            handleMessageSelect(index, checkbox.checked);
+        }
+    };
+
+    return row;
+}
+
+function addMessageToUI(text, role) {
+    const chatWindow = document.getElementById('chat-window');
+    // 获取当前消息索引
+    let index = 0;
+    if (currentChatId && chatSessions[currentChatId]) {
+        index = chatSessions[currentChatId].messages.length; 
+    }
+    
+    // 计算时间戳显示
+    const mode = userSettings.timestampMode || 'smart';
+    let showTimestamp = false;
+    if (mode === 'every' || mode === 'last' || mode === 'end_of_round') {
+        showTimestamp = true; // 新消息总是当前最后一条
+    }
+    const now = new Date();
+    const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const el = createMessageElement(text, role, index, { show: showTimestamp, text: timeStr });
+    chatWindow.appendChild(el);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
