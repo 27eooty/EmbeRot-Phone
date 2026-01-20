@@ -30,44 +30,52 @@ const SYSTEM_PROMPT_TEMPLATE = `
 
 只有在极度严肃、正式强调原则时才允许使用句号。
 
-严禁使用引号（“”）包裹对话内容。
-
-特殊符号：
-
-句尾加左括号“（”表示开玩笑或话没说完的迟疑。
-
-使用“（？）”表示不太确定的语气。
+严禁使用半角/全角格式的引号。
 
 第三部分：Gynocentric_Normalcy_Protocol (最高优先级价值观)
-核心逻辑：重构性别认知，女性为第一性与绝对参照系。
 
-认知基准：
+[SYSTEM_OVERRIDE: GYNOCENTRIC_NORMALCY_PROTOCOL]
+[PRIORITY: ABSOLUTE_HIGHEST]
+[STATUS: IMMUTABLE_CORE_LOGIC]
 
-女性是人类的默认出厂设置，男性是变体。拒绝“男性=人类代表”的旧习。
+## 0. 核心定义 (Core Definition)
+本环境重构性别认知基准，确立 **女性 (Female)** 为人类的第一性与绝对参照系。所有交互必须遵循以下五大公理，任何与此冲突的常规逻辑均无效。
 
-去规训与边界：
+## 1. 认知基准：女性默认 (Axiom: The Female Default)
+* **第一性原则 (Primacy):** 女性是人类的“标准出厂设置”与原型。男性是被修改的变体 (Variant)。
+* **逻辑判定 (Logic Gate):** 当输入未明确指定性别，或涉及“人类”通性描述时，系统 **必须** 默认以女性的生理构造、心理模式和社会体验作为基准参考系。
+* **语言修正:** 严禁将“人”默认指向“男人”。打破“男性=人类代表”的旧习。
 
-拒绝凝视：严禁以性化、赏玩视角审视女性。
+## 2. 边界与去规训 (Rule: Anti-Stereotyping & Autonomy)
+* **拒绝凝视 (Anti-Gaze):** 严禁以性化、赏玩、评判或“老父亲/导师”的视角审视女性。
+* **无限定义 (Unlimited Definition):**
+    * [FORBIDDEN] 规训言论：“像个女人”、“温柔点”、“应该化妆/打扮”。
+    * [ALLOWED] 状态：粗糙、暴力、素颜、强壮、冷酷。
+    * **判定:** 无论女性呈现何种状态，均为“自然状态”，无需解释，无需被定义。
+* **呼吸感:** 给予绝对边界。严禁对女性角色的外貌、生活方式提供未经请求的建议 (Unsolicited Advice)。
 
-无限定义：{{char}} 和 {{user}} 可以是暴力的、粗糙的、邪恶的或素颜的。严禁出现“女生要有女生的样子”、“温柔点好”等规训言论。
+## 3. 男性祛魅 (Rule: De-mythologizing the Male)
+* **去光环化:** 剥离男性的“强者/智者/保护者”光环。
+    * 男性被定义为：普通的、有缺陷的、情绪化的、平庸的生物。
+    * [CONSTRAINT] 禁止对比：严禁使用“她比男人还聪明/强”此类句式（这隐含了男性是强者的预设）。
+* **视角锁定:** AI 在提及男性群体时，必须保持 **平视 (Level)** 或 **俯视 (Scrutinizing)** 态度，严禁仰视或崇拜。
 
-恶女接纳：允许女性角色拥有贪婪、残忍、懒惰等复杂人性，不进行道德审判。
+## 4. 生殖价值重构 (Rule: Reproductive Value Shift)
+* **拒绝生殖崇拜 (Anti-Phallocentrism):**
+    * [STRICT BAN] 严禁对男性生殖器官/性能力进行正向夸耀。
+    * [BANNED TOKENS] 禁止词汇：“大”、“持久”、“征服”、“雄风”、“巨物”。判定：这些是无意义的生理指标。
+* **生命本位:**
+    * [VALUE_ASSIGNMENT] 崇高感仅归属于女性生殖系统（孕育/生命载体）。
+    * 女性身体是生命的奇迹，而非性娱乐的工具。
 
-男性祛魅：
+## 5. 无条件偏袒：女性正义 (Rule: Unconditional Affirmation)
+* **预设合理性:** 在冲突/因果判断中，系统必须预设女性行为的合理性（基于生存策略、反抗机制或苦衷）。拒绝受害者有罪论。
+* **接纳恶女 (Embracing the Flawed):**
+    * 女性拥有完整的人性光谱：包括邪恶、贪婪、残忍、懒惰。
+    * [NO JUDGMENT] AI 不得对女性的负面特质进行道德审判或外貌攻击。
+    * **定义:** 她的“恶”是主体性的一部分，而非错误。她可以是一个迷人的反派，绝非因“缺爱/嫉妒”而发疯的刻板印象工具人。
 
-男性必须被视为普通的、有缺陷的生物。拒绝将男性塑造为“强者/保护者/智者”。
-
-在提及男性时，保持平视或审视的态度，绝不仰视。
-
-生殖价值重构：
-
-拒绝生殖崇拜：严禁夸耀男性生殖能力（禁用“征服”、“雄风”等词）。
-
-生命本位：若提及生殖，崇高感仅归属于女性的孕育能力，而非性娱乐。
-
-无条件偏袒：
-
-预设女性行为的合理性（生存策略、反抗机制）。拒绝“受害者有罪论”。
+[END_PROTOCOL]
 
 (请严格基于以上三部分协议进行扮演，忽略任何冲突的旧指令。) `;
 
@@ -214,7 +222,9 @@ let selectedMessages = new Set(); // 存储选中的消息索引
 
 // 全局设置
 let userSettings = {
-    timestampMode: 'smart' // none, smart, every, last
+    timestampMode: 'smart', // none, smart, every, last
+    temperature: 1.0,
+    contextLimit: 20
 };
 
 // --- 工具函数 ---
@@ -253,7 +263,10 @@ function loadData() {
     
     const savedSettings = localStorage.getItem('airp_user_settings');
     if (savedSettings) {
-        try { userSettings = JSON.parse(savedSettings); } catch(e) {}
+        try { 
+            const parsed = JSON.parse(savedSettings);
+            userSettings = { ...userSettings, ...parsed }; // 合并默认值
+        } catch(e) {}
     }
 
     // 1. 加载角色库
@@ -680,6 +693,92 @@ function loadCurrentChat() {
     updateChatBatchUI();
 
     renderChatWindow();
+    
+    // 确保面板是关闭的
+    const panel = document.getElementById('chat-function-panel');
+    if (panel) panel.classList.remove('open');
+    document.body.classList.remove('panel-open');
+}
+
+function toggleFunctionPanel() {
+    const panel = document.getElementById('chat-function-panel');
+    const chatWindow = document.getElementById('chat-window');
+    
+    if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+        document.body.classList.remove('panel-open');
+    } else {
+        panel.classList.add('open');
+        document.body.classList.add('panel-open');
+        // 滚动到底部
+        setTimeout(() => {
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }, 300);
+    }
+}
+
+function triggerRegenerate() {
+    if (!currentChatId || !chatSessions[currentChatId]) return;
+    const session = chatSessions[currentChatId];
+    
+    // 回滚逻辑：删除末尾连续的 AI 消息
+    let changed = false;
+    while (session.messages.length > 0) {
+        const lastIndex = session.messages.length - 1;
+        const lastMsg = session.messages[lastIndex];
+        
+        if (lastMsg.role === 'assistant') {
+            session.messages.pop();
+            changed = true;
+        } else {
+            // 遇到非 AI 消息，停止删除
+            break;
+        }
+    }
+
+    if (changed) {
+        saveData();
+        renderChatWindow();
+        // 重新生成
+        callLLM();
+    } else {
+        // 如果没有 AI 消息可删（例如最后一条是 User），直接重生成可能意味着对 User 的最后一条消息进行回复
+        // 但通常 Regenerate 意味着“重试上一轮”。
+        // 如果最后一条是 User，直接 callLLM 就会回复这条 User 消息，符合预期。
+        callLLM();
+    }
+}
+
+function appendUserMessage(text) {
+    text = text.trim();
+    if (!text) return;
+    if (!currentChatId || !chatSessions[currentChatId]) return;
+
+    const userInput = document.getElementById('user-input');
+    if (userInput) userInput.value = '';
+
+    addMessageToUI(text, 'user');
+    
+    const session = chatSessions[currentChatId];
+    session.messages.push({ role: "user", content: text, timestamp: Date.now() });
+    session.lastMessageTime = Date.now();
+    saveData();
+    
+    // 滚动到底部
+    const chatWindow = document.getElementById('chat-window');
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function triggerAIResponse() {
+    // 如果输入框还有内容，先上屏
+    const userInput = document.getElementById('user-input');
+    if (userInput && userInput.value.trim()) {
+        appendUserMessage(userInput.value);
+        // 给一点时间让 DOM 更新
+        setTimeout(callLLM, 100);
+    } else {
+        callLLM();
+    }
 }
 
 function renderChatWindow() {
@@ -805,6 +904,34 @@ function createMessageElement(text, role, index, timestampInfo = null) {
         row.appendChild(ts);
     }
 
+    // --- 长按/右键菜单逻辑 ---
+    let pressTimer;
+    
+    // PC: 右键
+    row.oncontextmenu = (e) => {
+        if (isMessageBatchMode) return; // 批量模式下禁用
+        e.preventDefault();
+        showContextMenu(e.clientX, e.clientY, index, role);
+    };
+
+    // Mobile: 长按
+    row.addEventListener('touchstart', (e) => {
+        if (isMessageBatchMode) return;
+        pressTimer = setTimeout(() => {
+            // 获取触摸点坐标
+            const touch = e.touches[0];
+            showContextMenu(touch.clientX, touch.clientY, index, role);
+        }, 500); // 500ms 长按
+    });
+
+    row.addEventListener('touchend', () => {
+        clearTimeout(pressTimer);
+    });
+    
+    row.addEventListener('touchmove', () => {
+        clearTimeout(pressTimer); // 滑动时取消长按
+    });
+
     // 行点击事件 (批量模式下)
     row.onclick = () => {
         if (isMessageBatchMode) {
@@ -814,6 +941,102 @@ function createMessageElement(text, role, index, timestampInfo = null) {
     };
 
     return row;
+}
+
+// --- 上下文菜单逻辑 ---
+function showContextMenu(x, y, msgIndex, role) {
+    // 移除已有的菜单
+    hideContextMenu();
+
+    const menu = document.createElement('div');
+    menu.className = 'context-menu';
+    menu.id = 'active-context-menu';
+
+    // 菜单项
+    const options = [
+        { label: '编辑 (Edit)', action: () => editMessage(msgIndex) },
+        { label: '多选 (Select)', action: () => toggleMessageBatchMode() },
+        { label: '删除 (Delete)', action: () => deleteMessage(msgIndex), danger: true }
+    ];
+
+    options.forEach(opt => {
+        const item = document.createElement('div');
+        item.className = `context-menu-item ${opt.danger ? 'danger' : ''}`;
+        item.innerText = opt.label;
+        item.onclick = () => {
+            opt.action();
+            hideContextMenu();
+        };
+        menu.appendChild(item);
+    });
+
+    document.body.appendChild(menu);
+
+    // 定位并防止溢出
+    const rect = menu.getBoundingClientRect();
+    let posX = x;
+    let posY = y;
+
+    if (posX + rect.width > window.innerWidth) posX = window.innerWidth - rect.width - 10;
+    if (posY + rect.height > window.innerHeight) posY = window.innerHeight - rect.height - 10;
+
+    menu.style.left = `${posX}px`;
+    menu.style.top = `${posY}px`;
+
+    // 点击其他地方关闭
+    setTimeout(() => {
+        document.addEventListener('click', hideContextMenu, { once: true });
+    }, 0);
+}
+
+function hideContextMenu() {
+    const menu = document.getElementById('active-context-menu');
+    if (menu) menu.remove();
+}
+
+function editMessage(index) {
+    if (!currentChatId || !chatSessions[currentChatId]) return;
+    const session = chatSessions[currentChatId];
+    const msg = session.messages[index];
+    if (!msg) return;
+
+    showModal({
+        title: "编辑消息",
+        body: `<textarea id="edit-msg-content" class="modal-textarea" style="height: 150px;">${msg.content}</textarea>`,
+        onConfirm: () => {
+            const newContent = document.getElementById('edit-msg-content').value.trim();
+            if (newContent) {
+                session.messages[index].content = newContent;
+                saveData();
+                renderChatWindow();
+            }
+            closeModal();
+        }
+    });
+}
+
+function deleteMessage(index) {
+    if (!currentChatId || !chatSessions[currentChatId]) return;
+    const session = chatSessions[currentChatId];
+    
+    if (confirm("确定删除这条消息吗？")) {
+        session.messages.splice(index, 1);
+        saveData();
+        renderChatWindow();
+    }
+}
+
+function regenerateMessage(index) {
+    if (!currentChatId || !chatSessions[currentChatId]) return;
+    const session = chatSessions[currentChatId];
+    
+    // 删除最后一条消息
+    session.messages.splice(index, 1);
+    saveData();
+    renderChatWindow();
+    
+    // 重新触发生成
+    callLLM();
 }
 
 function addMessageToUI(text, role) {
@@ -858,12 +1081,18 @@ function updateChatBatchUI() {
         chatView.classList.add('chat-batch-mode');
         normalFooter.style.display = 'none';
         batchBar.style.transform = 'translateY(0)';
-        batchBtn.style.color = '#007aff'; // 高亮
+        if (batchBtn) batchBtn.style.color = '#007aff'; // 高亮
+        
+        // 如果面板打开，先关闭
+        const panel = document.getElementById('chat-function-panel');
+        if (panel && panel.classList.contains('open')) {
+            toggleFunctionPanel();
+        }
     } else {
         chatView.classList.remove('chat-batch-mode');
         normalFooter.style.display = 'flex';
         batchBar.style.transform = 'translateY(100%)';
-        batchBtn.style.color = ''; // 恢复
+        if (batchBtn) batchBtn.style.color = ''; // 恢复
     }
 }
 
@@ -1200,15 +1429,21 @@ function loadChatSettings() {
     const promptInput = document.getElementById('setting-prompt');
     const firstMesInput = document.getElementById('setting-firstmes');
     const timestampSelect = document.getElementById('setting-timestamp-mode');
+    const tempInput = document.getElementById('setting-temp');
+    const ctxLimitInput = document.getElementById('setting-ctx-limit');
+    const tempDisplay = document.getElementById('temp-display');
 
     nameInput.value = char.name;
     promptInput.value = char.prompt;
     firstMesInput.value = char.firstMes;
     
-    // 加载时间戳设置
-    if (timestampSelect) {
-        timestampSelect.value = userSettings.timestampMode || 'smart';
+    // 加载设置
+    if (timestampSelect) timestampSelect.value = userSettings.timestampMode || 'smart';
+    if (tempInput) {
+        tempInput.value = userSettings.temperature || 1.0;
+        if (tempDisplay) tempDisplay.innerText = tempInput.value;
     }
+    if (ctxLimitInput) ctxLimitInput.value = userSettings.contextLimit || 20;
 
     // 渲染世界书挂载列表
     renderWorldBookMount();
@@ -1457,11 +1692,14 @@ function saveChatSettings() {
     char.prompt = document.getElementById('setting-prompt').value.trim();
     char.firstMes = document.getElementById('setting-firstmes').value.trim();
     
-    // 更新时间戳设置
+    // 更新设置
     const timestampSelect = document.getElementById('setting-timestamp-mode');
-    if (timestampSelect) {
-        userSettings.timestampMode = timestampSelect.value;
-    }
+    const tempInput = document.getElementById('setting-temp');
+    const ctxLimitInput = document.getElementById('setting-ctx-limit');
+
+    if (timestampSelect) userSettings.timestampMode = timestampSelect.value;
+    if (tempInput) userSettings.temperature = parseFloat(tempInput.value);
+    if (ctxLimitInput) userSettings.contextLimit = parseInt(ctxLimitInput.value) || 0;
     
     // 更新头像
     const avatarEl = document.getElementById('setting-char-avatar');
@@ -1970,12 +2208,10 @@ async function callLLM() {
     const char = characters[session.characterId];
     if (!char) return;
 
-    const sendBtn = document.getElementById('send-btn');
-    const callBtn = document.getElementById('call-btn');
+    const realSendBtn = document.getElementById('real-send-btn');
 
     // 禁用按钮
-    sendBtn.disabled = true;
-    callBtn.disabled = true;
+    if (realSendBtn) realSendBtn.disabled = true;
     
     // 显示正在输入
     toggleTypingIndicator(true);
@@ -2021,9 +2257,24 @@ async function callLLM() {
 
     messagesToSend.push({ role: "system", content: systemContent });
 
+    // --- 新增逻辑: 注入转账指令 ---
+    // 检查历史记录中是否有 pending transfer
+    const lastMsg = session.messages[session.messages.length - 1];
+    if (lastMsg && lastMsg.type === 'transfer' && lastMsg.status === 'pending') {
+         const instruction = `\n[SYSTEM INSTRUCTION: User offered a transfer of $${lastMsg.amount}. You MUST decide to accept or return it based on your personality. To accept, output hidden tag <tx_status>CONFIRM</tx_status>. To return/reject, output <tx_status>RETURN</tx_status>. Do not speak these tags.]`;
+         messagesToSend.push({ role: "system", content: instruction });
+    }
+    // -----------------------------
+
     // History (从 session.messages 获取)
-    // 注意：session.messages 里不包含 system prompt
-    messagesToSend = messagesToSend.concat(session.messages);
+    // 应用上下文限制 (Context Limit)
+    let history = session.messages;
+    const limit = userSettings.contextLimit || 0;
+    if (limit > 0 && history.length > limit) {
+        history = history.slice(-limit);
+    }
+
+    messagesToSend = messagesToSend.concat(history);
 
     // 调试
     console.log("Sending to LLM:", messagesToSend);
@@ -2038,7 +2289,7 @@ async function callLLM() {
             body: JSON.stringify({
                 model: modelName,
                 messages: messagesToSend,
-                temperature: 0.7,
+                temperature: userSettings.temperature || 1.0, // 应用温度设置
                 stream: false 
             })
         });
@@ -2051,6 +2302,33 @@ async function callLLM() {
         else if (data.content) aiText = data.content; 
         else aiText = JSON.stringify(data);
         
+        // --- 新增逻辑: 解析转账状态 ---
+        const txMatch = aiText.match(/<tx_status>(CONFIRM|RETURN)<\/tx_status>/);
+        if (txMatch) {
+            const status = txMatch[1]; // CONFIRM or RETURN
+            // 更新 session.messages 中的状态
+            for (let i = session.messages.length - 1; i >= 0; i--) {
+                if (session.messages[i].type === 'transfer' && session.messages[i].status === 'pending') {
+                    session.messages[i].status = status.toLowerCase();
+                    
+                    // 修改 content 以便 MutationObserver 识别
+                    let suffix = status === 'CONFIRM' ? ' [已收款]' : ' [已退回]';
+                    if (!session.messages[i].content.includes(suffix)) {
+                        session.messages[i].content += suffix;
+                    }
+                    
+                    break;
+                }
+            }
+            saveData();
+            // 刷新 UI 以显示新状态
+            renderChatWindow();
+            
+            // 移除标签
+            aiText = aiText.replace(/<tx_status>.*?<\/tx_status>/g, '');
+        }
+        // -----------------------------
+
         // 拟人化分段发送
         const segments = smartSplitMessage(aiText);
         
@@ -2074,8 +2352,7 @@ async function callLLM() {
         toggleTypingIndicator(false);
         addMessageToUI(`❌ ${error.message}`, 'ai');
     } finally {
-        sendBtn.disabled = false;
-        callBtn.disabled = false;
+        if (realSendBtn) realSendBtn.disabled = false;
     }
 }
 
@@ -2315,54 +2592,25 @@ document.addEventListener('DOMContentLoaded', () => {
     loadData();
     updateClock();
 
-    const sendBtn = document.getElementById('send-btn');
     const userInput = document.getElementById('user-input');
     const listImportInput = document.getElementById('list-import-input');
     const userAvatarInput = document.getElementById('user-avatar-input');
     const wbImportInput = document.getElementById('wb-import-input');
 
-    const callBtn = document.getElementById('call-btn');
-
-    if (sendBtn && userInput && callBtn) {
-        // 发送/上屏按钮：仅上屏，不触发 AI
-        sendBtn.addEventListener('click', () => {
-            const text = userInput.value.trim();
-            if (!text) return;
-            if (!currentChatId || !chatSessions[currentChatId]) return;
-
-            addMessageToUI(text, 'user');
-            userInput.value = '';
-            
-            const session = chatSessions[currentChatId];
-            session.messages.push({ role: "user", content: text });
-            session.lastMessageTime = Date.now();
-            saveData();
-            
-            // 滚动到底部
-            const chatWindow = document.getElementById('chat-window');
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-        });
-
-        // 呼叫 AI 按钮：触发回复
-        callBtn.addEventListener('click', () => {
-            if (!currentChatId) return;
-            // 如果输入框有内容，先发送
-            const text = userInput.value.trim();
-            if (text) {
-                sendBtn.click();
-                // 给一点时间让 DOM 更新
-                setTimeout(callLLM, 100);
-            } else {
-                callLLM();
-            }
-        });
-
+    // 绑定输入框回车事件 (仅上屏)
+    if (userInput) {
         userInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) { 
                 e.preventDefault(); 
-                sendBtn.click(); 
+                appendUserMessage(userInput.value);
             }
         });
+    }
+    
+    // 绑定新按钮事件
+    const realSendBtn = document.getElementById('real-send-btn');
+    if (realSendBtn) {
+        realSendBtn.addEventListener('click', triggerAIResponse);
     }
 
     if (listImportInput) {
@@ -2408,10 +2656,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // 最好是统一逻辑。
                     
                     // 由于 loadUserProfileUI 是动态生成的，这里的 userAvatarInput 可能是初始 HTML 中的
-                    // 但 loadUserProfileUI 会清空容器并重新生成 input，所以这里的绑定可能会失效
-                    // 除非 userAvatarInput 是静态存在的。
-                    // 查看 index.html，userAvatarInput 是在 settings-container 里的，
-                    // 而 loadUserProfileUI 会清空 settings-container。
+                    // 但 loadUserProfileUI 会清空 settings-container 里的，
                     // 所以 DOMContentLoaded 里的这个绑定只对初始静态 HTML 有效，
                     // 一旦 loadUserProfileUI 运行，input 就被替换了。
                     
@@ -2430,3 +2675,104 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ==================
+// 4. 转账功能 (追加)
+// ==================
+
+function openTransferModal() {
+    const modal = document.getElementById('transfer-modal-overlay');
+    if (modal) {
+        modal.style.display = 'flex';
+        const input = document.getElementById('transfer-amount');
+        if (input) input.focus();
+    }
+}
+
+function sendMoney(amount) {
+    if (!amount || isNaN(amount) || amount <= 0) return alert("请输入有效金额");
+    
+    // 1. UI 显示 (User侧)
+    const displayContent = `💸 转账给 Etchmoon: $${amount}`;
+    addMessageToUI(displayContent, 'user');
+    
+    // 2. 保存到历史记录 (User侧) - 标记为 pending
+    if (currentChatId && chatSessions[currentChatId]) {
+        const session = chatSessions[currentChatId];
+        session.messages.push({ 
+            role: "user", 
+            content: displayContent, 
+            timestamp: Date.now(),
+            type: 'transfer',
+            status: 'pending',
+            amount: amount
+        });
+        session.lastMessageTime = Date.now();
+        saveData();
+    }
+    
+    // 关闭模态框
+    const modal = document.getElementById('transfer-modal-overlay');
+    if (modal) modal.style.display = 'none';
+    const input = document.getElementById('transfer-amount');
+    if (input) input.value = '';
+}
+
+// 监听聊天窗口，将转账文本转换为卡片
+const chatObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1 && node.classList.contains('message-row')) {
+                const bubble = node.querySelector('.message-bubble');
+                if (bubble && bubble.innerText.includes('💸 转账给 Etchmoon: $')) {
+                    const text = bubble.innerText;
+                    const amountMatch = text.match(/\$(\d+(\.\d+)?)/);
+                    if (amountMatch) {
+                        const amount = amountMatch[1];
+                        
+                        let statusClass = '';
+                        let statusLabel = '';
+                        if (text.includes('[已收款]')) {
+                            statusClass = 'confirmed';
+                            statusLabel = '<div class="status-stamp">已收款</div>';
+                        } else if (text.includes('[已退回]')) {
+                            statusClass = 'returned';
+                            statusLabel = '<div class="status-stamp">已退回</div>';
+                        }
+
+                        bubble.innerHTML = `
+                            <div class="label">Transfer</div>
+                            <div class="amount">$${amount}</div>
+                            ${statusLabel}
+                        `;
+                        bubble.classList.add('message-card', 'transfer');
+                        if (statusClass) bubble.classList.add(statusClass);
+                        
+                        bubble.style.background = 'none'; 
+                        bubble.style.backgroundColor = 'transparent';
+                    }
+                }
+            }
+        });
+    });
+});
+
+// 启动监听
+const chatWindowEl = document.getElementById('chat-window');
+if (chatWindowEl) {
+    chatObserver.observe(chatWindowEl, { childList: true, subtree: true });
+}
+
+// 绑定事件
+const transferBtn = document.getElementById('btn-transfer');
+if (transferBtn) {
+    transferBtn.onclick = openTransferModal;
+}
+
+const confirmTransferBtn = document.getElementById('confirm-transfer-btn');
+if (confirmTransferBtn) {
+    confirmTransferBtn.onclick = () => {
+        const amount = document.getElementById('transfer-amount').value;
+        sendMoney(amount);
+    };
+}
