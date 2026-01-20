@@ -315,13 +315,13 @@ body {
     font-weight: 500;
 }
 
-/* 气泡旁时间戳 (模式 C & D) */
+/* 气泡旁时间戳 (模式 C & D) - Side-Fixed */
 .chat-timestamp {
-    font-size: 0.7rem; /* 极小字体 */
+    font-size: 10px; /* 极小字体 */
     color: #8e8e93;
-    margin-top: 2px;
-    opacity: 0.8;
     white-space: nowrap;
+    margin-bottom: 5px; /* 底部对齐微调 */
+    flex-shrink: 0;
 }
 
 /* 调整气泡布局以容纳时间戳 */
@@ -331,36 +331,35 @@ body {
     gap: 8px;
     width: 100%;
     position: relative;
-    margin-bottom: 6px; /* 增加一点间距 */
+    margin-bottom: 6px;
 }
 
 /* 针对不同角色的时间戳位置 */
-.message-row.user .chat-timestamp {
-    color: rgba(255, 255, 255, 0.7); /* 在蓝色背景上可能看不清，如果是放在气泡外则用灰色 */
-    /* 如果是在气泡内 */
-    display: block;
-    text-align: right;
-    margin-top: 4px;
+/* AI (Left): [Avatar] [Bubble] [Timestamp] */
+.message-row.ai .chat-timestamp {
+    margin-left: 4px;
 }
-/* 如果时间戳在气泡外，需要调整结构。目前假设在气泡内或紧随气泡 */
-/* 实际上，为了不破坏气泡样式，通常把时间戳放在气泡容器内，或者作为 message-row 的一部分 */
 
-/* 修正：让时间戳显示在气泡下方或旁边 */
-/* 这里我们采用将时间戳放在气泡容器内部底部的方式 */
+/* User (Right): [Timestamp] [Bubble] [Avatar] (Visual Order) */
+/* DOM Order: [Avatar] [Bubble] [Timestamp] with row-reverse */
+.message-row.user .chat-timestamp {
+    margin-right: 4px; /* 在 row-reverse 中，这实际上增加了与 Bubble 的间距 */
+    /* 注意：row-reverse 下，margin-right 作用于元素的右侧（视觉上的左侧？不，是元素自身的右侧） */
+    /* 在 row-reverse 中：
+       Start -> End
+       Timestamp -> Bubble -> Avatar
+       Timestamp 是第一个子元素（DOM最后），所以在最左边（视觉Start）。
+       Bubble 在中间。
+       Avatar 在最右边（视觉End）。
+       
+       Timestamp 的 margin-right 会推开 Bubble。
+       所以 margin-right 是正确的。
+    */
+}
+
+/* 移除旧的气泡内时间戳样式 */
 .message-bubble .chat-timestamp {
-    display: block;
-    margin-top: 4px;
-    font-size: 10px;
-    line-height: 1;
-    opacity: 0.6;
-}
-.message-row.user .message-bubble .chat-timestamp {
-    color: rgba(255, 255, 255, 0.9);
-    text-align: right;
-}
-.message-row.ai .message-bubble .chat-timestamp {
-    color: #8e8e93;
-    text-align: right; /* AI 的时间也放右下角比较整齐，或者左下角 */
+    display: none;
 }
 
 /* 批量选择模式下的 Checkbox */

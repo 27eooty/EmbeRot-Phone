@@ -791,20 +791,19 @@ function createMessageElement(text, role, index, timestampInfo = null) {
     bubble.className = 'message-bubble';
     bubble.innerText = text;
 
-    // 时间戳 (模式 C & D)
+    // 组装
+    // 顺序：Checkbox -> Avatar -> Bubble -> Timestamp
+    row.appendChild(checkbox);
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+
+    // 时间戳 (模式 C & D) - 现在作为兄弟元素
     if (timestampInfo && timestampInfo.show) {
         const ts = document.createElement('div');
         ts.className = 'chat-timestamp';
         ts.innerText = timestampInfo.text;
-        bubble.appendChild(ts);
+        row.appendChild(ts);
     }
-
-    // 组装
-    // 顺序：Checkbox -> (Avatar + Bubble)
-    // Flex 布局会处理 Avatar 和 Bubble 的左右关系
-    row.appendChild(checkbox);
-    row.appendChild(avatar);
-    row.appendChild(bubble);
 
     // 行点击事件 (批量模式下)
     row.onclick = () => {
