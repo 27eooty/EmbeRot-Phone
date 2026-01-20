@@ -200,6 +200,11 @@ let selectedItems = new Set(); // 存储选中的条目索引或文件夹名
 let isMessageBatchMode = false;
 let selectedMessages = new Set(); // 存储选中的消息索引
 
+// 全局设置
+let userSettings = {
+    timestampMode: 'smart' // none, smart, every, last
+};
+
 // --- 工具函数 ---
 function sanitizeInput(str) {
     if (!str) return "";
@@ -226,6 +231,7 @@ function saveData() {
     localStorage.setItem('airp_endpoint', baseUrl);
     localStorage.setItem('airp_apikey', apiKey);
     localStorage.setItem('airp_model', modelName);
+    localStorage.setItem('airp_user_settings', JSON.stringify(userSettings));
 }
 
 function loadData() {
@@ -233,6 +239,11 @@ function loadData() {
     apiKey = localStorage.getItem('airp_apikey') || '';
     modelName = localStorage.getItem('airp_model') || '';
     
+    const savedSettings = localStorage.getItem('airp_user_settings');
+    if (savedSettings) {
+        try { userSettings = JSON.parse(savedSettings); } catch(e) {}
+    }
+
     // 1. 加载角色库
     const savedChars = localStorage.getItem('airp_characters');
     if (savedChars) {
@@ -1972,7 +1983,7 @@ async function callLLM() {
             addMessageToUI(seg, 'ai');
 
             // 存入会话历史
-            session.messages.push({ role: "assistant", content: seg });
+            session.messages.push({ role: "assistant", content: seg, timestamp: Date.now() });
             session.lastMessageTime = Date.now();
             saveData();
         }

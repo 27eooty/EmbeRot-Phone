@@ -314,7 +314,21 @@
 
         <div class="settings-container">
             
-            <!-- 区域一：连接设置 -->
+            <!-- 区域一：界面设置 -->
+            <div class="settings-group-title" style="margin: 20px 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">界面设置 (UI Settings)</div>
+            <div class="settings-group">
+                <div class="input-row">
+                    <label>聊天时间戳显示 (Timestamp Display)</label>
+                    <select id="setting-timestamp-mode">
+                        <option value="none">不显示 (Hidden)</option>
+                        <option value="smart">智能间隔 (Smart - >5min)</option>
+                        <option value="every">每条都显示 (Always)</option>
+                        <option value="last">仅显示最后一条 (Last Only)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 区域二：连接设置 -->
             <div class="settings-group-title" style="margin: 20px 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">连接设置 (API Settings)</div>
             <div class="settings-group">
                 <div class="input-row" style="padding-bottom: 45px;">
@@ -337,7 +351,7 @@
                 </div>
             </div>
 
-            <!-- 区域二：数据管理 -->
+            <!-- 区域三：数据管理 -->
             <div class="settings-group-title" style="margin: 20px 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">数据管理 (Data Management)</div>
             <div style="margin: 0 15px 10px; font-size: 13px; color: #8e8e93;">
                 备份或恢复你的所有角色和聊天记录。
