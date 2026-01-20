@@ -3,7 +3,7 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
     background-color: #000;
-    height: 100vh;
+    height: 100dvh; /* 适配移动端动态视口 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,16 +78,18 @@ body {
     flex-direction: column;
 }
 .calendar-widget {
-    background: rgba(255, 255, 255, 0.35); /* 白色毛玻璃 */
+    background: rgba(255, 255, 255, 0.2); /* 更通透的白色毛玻璃 */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3); /* 细边框 */
     border-radius: 22px;
     height: 100%; /* 撑满高度 */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #000;
+    color: #fff; /* 改为白色文字以适应深色背景 */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
@@ -138,13 +140,14 @@ body {
 /* 底部 Dock 栏 */
 .dock-container {
     position: absolute;
-    bottom: 20px; /* 悬浮 */
+    bottom: calc(10px + env(safe-area-inset-bottom)); /* 适配底部安全区 */
     width: 100%;
     padding: 0 20px;
     height: 90px;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000; /* 确保层级最高 */
 }
 .ios-dock {
     width: 100%;
@@ -333,7 +336,7 @@ body {
 .chat-batch-mode .message-row { cursor: pointer; }
 
 /* 底部输入 */
-footer { min-height: 50px; background-color: rgba(249, 249, 249, 0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid #c6c6c8; padding: 8px; display: flex; align-items: flex-end; gap: 10px; width: 100%; padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
+footer { min-height: 50px; background-color: rgba(249, 249, 249, 0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid #c6c6c8; padding: 8px; display: flex; align-items: flex-end; gap: 10px; width: 100%; padding-bottom: calc(8px + env(safe-area-inset-bottom)); position: relative; z-index: 1000; }
 textarea { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #c6c6c8; background-color: #fff; resize: none; height: 36px; max-height: 100px; font-family: inherit; font-size: 16px; outline: none; }
 button#send-btn { width: 36px; height: 36px; border-radius: 50%; background-color: #007aff; border: none; color: white; font-weight: bold; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s; }
 button#send-btn:active { background-color: #005bb5; }
@@ -629,7 +632,7 @@ button#call-btn:active { background-color: #248a3d; }
 ========================================= */
 @media (min-width: 768px) {
     /* 限制内容最大宽度并居中 */
-    .main-content-area,
+    .middle-section,
     .dock-container,
     #chat-window,
     .settings-container,
@@ -640,6 +643,13 @@ button#call-btn:active { background-color: #248a3d; }
         max-width: 800px;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    /* 强制保持 Grid 布局 */
+    .middle-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
     }
 
     /* 头部和底部也需要限制内容宽度 */
@@ -663,14 +673,6 @@ button#call-btn:active { background-color: #248a3d; }
     .ios-dock {
         width: 100%;
         max-width: 400px; /* Dock 不需要太宽 */
-    }
-
-    /* 调整小组件和图标在宽屏下的显示 */
-    .widgets-grid {
-        gap: 30px;
-    }
-    .apps-row {
-        justify-content: space-around;
     }
     
     /* 优化滚动条样式 (可选) */
