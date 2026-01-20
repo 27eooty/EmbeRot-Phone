@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- PWA / iOS Web App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="apple-touch-icon" href="assets/icon.png">
+    <link rel="manifest" href="manifest.json">
+
+    <title>My iOS Phone</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/exifreader/dist/exif-reader.min.js"></script>
+</head>
+<body>
+
+<div id="app-container">
+
+    <!-- 0. iOS 主屏幕 (入口) -->
+    <div id="home-view" class="page active-home">
+        <div class="ios-status-bar">Let's AIRP</div>
+        
+        <div class="clock-area">
+            <div id="live-clock">12:00</div>
+            <div id="live-date">1月1日 星期一</div>
+        </div>
+
+        <div class="main-content-area">
+            <div class="widgets-grid">
+                <div class="ios-widget">
+                    <div class="widget-title">状态</div>
+                    <div class="widget-content" style="color: #34c759;">运行中</div>
+                    <div style="font-size:12px; opacity: 0.6;">电量充足</div>
+                </div>
+                <div class="ios-widget">
+                    <div class="widget-title">天气</div>
+                    <div class="widget-content">🌤️ 23°</div>
+                    <div style="font-size:12px; opacity: 0.6;">空气优</div>
+                </div>
+            </div>
+
+            <div class="apps-row">
+                <div class="app-item" onclick="MapsTo('app-main')">
+                    <div class="app-icon icon-message">💬</div>
+                    <span class="app-label">AIRP</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon icon-placeholder1">📷</div>
+                    <span class="app-label">相册</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon icon-placeholder2">🎵</div>
+                    <span class="app-label">音乐</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon icon-placeholder3">🗺️</div>
+                    <span class="app-label">地图</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dock-container">
+            <div class="ios-dock">
+                <div class="app-item">
+                    <div class="app-icon" style="background: #39b54a;">📞</div>
+                </div>
+                <div class="app-item" onclick="MapsTo('world-book')">
+                    <div class="app-icon" style="background: #007aff;">🌐</div>
+                </div>
+                 <div class="app-item" onclick="MapsTo('settings')">
+                    <div class="app-icon icon-settings">⚙️</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. App 主界面 (一级界面，包含 Tab Bar) -->
+    <div id="app-main-view" class="page">
+        
+        <!-- Tab A: 聊天列表页 (消息) -->
+        <div id="view-chat-list" class="tab-pane active-pane">
+            <div class="app-header">
+                <button class="header-btn" onclick="MapsTo('home')">
+                    <span style="font-size: 24px; margin-right: 5px;">‹</span> 主屏
+                </button>
+                <span>消息</span>
+                <div style="width: 50px;"></div> <!-- 占位 -->
+            </div>
+            <div id="chat-list-container" class="scroll-content">
+                <!-- 列表项将由 JS 生成 -->
+                <div style="text-align: center; color: #999; margin-top: 50px; font-size: 14px;">暂无活跃会话<br>请去“列表”发起聊天</div>
+            </div>
+        </div>
+
+        <!-- Tab B: 角色列表页 (通讯录) -->
+        <div id="view-contact-list" class="tab-pane">
+            <div class="app-header">
+                <div style="width: 50px;"></div> <!-- 占位 -->
+                <span>列表</span>
+                <button class="header-btn" style="font-size: 24px;" onclick="showAddCharacterModal()">+</button>
+            </div>
+            <div id="contact-list-container" class="scroll-content">
+                <!-- 列表项将由 JS 生成 -->
+            </div>
+            <input type="file" id="list-import-input" accept=".png,.json" style="display: none;">
+        </div>
+
+        <!-- Tab C: 我的页面 -->
+        <div id="view-profile" class="tab-pane">
+            <div class="app-header">
+                <div style="width: 50px;"></div> <!-- 占位 -->
+                <span>我的</span>
+                <div style="width: 50px;"></div> <!-- 占位 -->
+            </div>
+            <div class="settings-container scroll-content">
+                <div style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
+                    <div id="user-avatar-preview" style="width: 80px; height: 80px; border-radius: 50%; background: #ccc; margin-bottom: 10px; background-size: cover; background-position: center; cursor: pointer;" onclick="document.getElementById('user-avatar-input').click()"></div>
+                    <div style="font-size: 14px; color: #007aff;">点击更换头像</div>
+                    <input type="file" id="user-avatar-input" accept="image/*" style="display: none;">
+                </div>
+                <div class="settings-group">
+                    <div class="input-row">
+                        <label>用户昵称 (User Name)</label>
+                        <input type="text" id="user-name-input" placeholder="你的名字">
+                    </div>
+                    <div class="input-row">
+                        <label>用户设定 (User Persona)</label>
+                        <textarea id="user-persona-input" placeholder="外貌、性格、关系..." style="height: 120px;"></textarea>
+                    </div>
+                </div>
+                <button class="header-btn" style="width: 100%; background: #007aff; color: white; padding: 12px; border-radius: 10px; font-weight: 600; text-align: center; justify-content: center;" onclick="saveUserProfile()">保存设定</button>
+                
+                <!-- 数据管理区域 -->
+                <div class="settings-group-title" style="margin: 30px 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">数据管理</div>
+                <div class="settings-group">
+                    <div class="input-row" style="padding: 12px 15px; cursor: pointer; color: #007aff; text-align: center;" onclick="exportData()">
+                        📤 导出备份数据
+                    </div>
+                    <div class="input-row" style="padding: 12px 15px; cursor: pointer; color: #007aff; text-align: center; border-top: 1px solid #e5e5ea;" onclick="document.getElementById('backup-import-input').click()">
+                        📥 导入恢复数据
+                    </div>
+                </div>
+                <input type="file" id="backup-import-input" accept=".json" style="display: none;" onchange="importData(this)">
+            </div>
+        </div>
+
+        <!-- 底部导航栏 -->
+        <div class="bottom-tab-bar">
+            <div class="tab-item active" id="tab-btn-chats" onclick="switchMainTab('chats')">
+                <div style="font-size: 24px;">💬</div>
+                <div style="font-size: 10px;">消息</div>
+            </div>
+            <div class="tab-item" id="tab-btn-contacts" onclick="switchMainTab('contacts')">
+                <div style="font-size: 24px;">👥</div>
+                <div style="font-size: 10px;">列表</div>
+            </div>
+            <div class="tab-item" id="tab-btn-me" onclick="switchMainTab('me')">
+                <div style="font-size: 24px;">👤</div>
+                <div style="font-size: 10px;">我的</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 聊天窗口页 (二级界面) -->
+    <div id="view-chat-room" class="page">
+        <div class="app-header">
+            <button class="header-btn" onclick="backToChatList()">
+                <span style="font-size: 24px; margin-right: 5px;">‹</span> 列表
+            </button>
+            <span id="header-title">Chat</span>
+            <div style="display: flex; gap: 10px;">
+                <button class="header-btn" id="chat-batch-btn" onclick="toggleMessageBatchMode()">⋮</button>
+                <button class="header-btn" onclick="MapsTo('chat-settings')">⚙️</button>
+            </div>
+        </div>
+        
+        <div id="chat-window">
+            <!-- 消息将由 JS 生成 -->
+        </div>
+        
+        <!-- 正常聊天底部 -->
+        <footer id="chat-footer-normal">
+            <button id="call-btn" title="呼叫 AI">📞</button>
+            <textarea id="user-input" placeholder="iMessage"></textarea>
+            <button id="send-btn" title="发送/上屏">↑</button>
+        </footer>
+
+        <!-- 批量操作底部 -->
+        <div id="chat-batch-bar" class="batch-bar">
+            <button onclick="deleteSelectedMessages()" class="batch-btn delete" style="width: 100%;">🗑️ 删除选中</button>
+        </div>
+    </div>
+
+    <!-- 3. 聊天设置页 (二级界面) -->
+    <div id="chat-settings-view" class="page">
+        <div class="app-header">
+            <button class="header-btn" onclick="MapsTo('chat-room')">
+                <span style="font-size: 24px; margin-right: 5px;">‹</span> 返回
+            </button>
+            <span>聊天设置</span>
+            <button class="header-btn" style="font-weight: 600;" onclick="saveChatSettings()">保存</button>
+        </div>
+        <div class="settings-container">
+            
+            <!-- 头像编辑区域 -->
+            <div style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
+                <div id="setting-char-avatar" style="width: 80px; height: 80px; border-radius: 50%; background: #ccc; margin-bottom: 10px; background-size: cover; background-position: center; cursor: pointer;" onclick="document.getElementById('setting-char-avatar-input').click()"></div>
+                <div style="font-size: 14px; color: #007aff;">点击更换头像</div>
+                <input type="file" id="setting-char-avatar-input" accept="image/*" style="display: none;">
+            </div>
+
+            <!-- Token 统计面板 -->
+            <div class="token-stats-panel" style="background: #007aff; color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: 600; box-shadow: 0 4px 10px rgba(0,122,255,0.3);">
+                <div id="token-count-display">预计发送：约 0 Tokens</div>
+            </div>
+
+            <div class="settings-group">
+                <div class="input-row">
+                    <label>角色名称</label>
+                    <input type="text" id="setting-charname">
+                </div>
+                <div class="input-row">
+                    <label>系统提示词 (System Prompt)</label>
+                    <textarea id="setting-prompt" placeholder="人设..."></textarea>
+                </div>
+                <div class="input-row">
+                    <label>开场白 (First Message)</label>
+                    <textarea id="setting-firstmes" placeholder="第一句回复..."></textarea>
+                </div>
+            </div>
+
+            <!-- 用户面具选择 -->
+            <div class="settings-group-title" style="margin: 20px 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">当前用户面具 (User Persona)</div>
+            <div class="settings-group">
+                <div class="input-row" id="persona-selector-container">
+                    <!-- JS 生成下拉菜单 -->
+                </div>
+                <div style="padding: 10px 0; text-align: center;">
+                    <button onclick="switchMainTab('me'); MapsTo('app-main');" style="background: none; border: none; color: #007aff; font-size: 14px; cursor: pointer;">管理面具 ></button>
+                </div>
+            </div>
+
+            <!-- 世界书挂载区域 -->
+            <div class="settings-group-title" style="margin: 20px 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">世界书挂载</div>
+            <div class="settings-group" id="world-book-mount-container">
+                <!-- 头部控制栏 -->
+                <div class="input-row" style="display: flex; justify-content: space-between; align-items: center; padding-right: 0;">
+                    <span style="font-size: 14px; color: #666;">选择要启用的条目</span>
+                    <button id="wb-toggle-all-btn" style="background: none; border: none; color: #007aff; font-size: 14px; cursor: pointer; padding: 5px 10px;">全选</button>
+                </div>
+                <!-- 列表容器 -->
+                <div id="wb-mount-list">
+                    <!-- JS 生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 世界书页 (从主屏幕进入) -->
+    <div id="world-book-view" class="page">
+        <div class="app-header">
+            <button class="header-btn" onclick="MapsTo('home')" style="width: 60px;">
+                <span style="font-size: 24px; margin-right: 5px;">‹</span>
+            </button>
+            <span style="flex: 1; text-align: center;">世界书</span>
+            <div style="display: flex; gap: 5px; width: 140px; justify-content: flex-end;">
+                <button class="header-btn" onclick="createNewFolder()" title="新建文件夹">📁</button>
+                <button class="header-btn" onclick="document.getElementById('wb-import-input').click()" title="导入">📤</button>
+                <button class="header-btn" onclick="createWorldBookEntry()" title="新建条目">➕</button>
+                <button class="header-btn" onclick="toggleBatchMode()" id="btn-batch-mode" title="批量管理">✅</button>
+            </div>
+        </div>
+        <div id="world-book-container" style="overflow-y: auto; height: 100%; background-color: #f2f2f7; padding: 15px; padding-bottom: 80px;">
+            <!-- 条目列表 -->
+            <div style="text-align: center; color: #999; margin-top: 50px;">暂无条目</div>
+        </div>
+        
+        <!-- 批量操作底栏 -->
+        <div id="wb-batch-bar" class="batch-bar">
+            <button onclick="batchDelete()" class="batch-btn delete">🗑️ 删除</button>
+            <button onclick="batchMove()" class="batch-btn">📂 移动</button>
+            <button onclick="batchCopy()" class="batch-btn">📋 复制</button>
+        </div>
+
+        <input type="file" id="wb-import-input" accept=".json,.png" style="display: none;">
+    </div>
+
+    <!-- 通用模态框 -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 id="modal-title">标题</h3>
+            <div id="modal-body">
+                <!-- 动态内容 -->
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal()" class="modal-btn cancel">取消</button>
+                <button id="modal-confirm-btn" class="modal-btn confirm">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. 全局设置页 (从主屏幕进入) -->
+    <div id="settings-view" class="page">
+        <div class="app-header">
+             <button class="header-btn" onclick="MapsTo('home')">
+                <span style="font-size: 24px; margin-right: 5px;">‹</span> 主屏幕
+            </button>
+            <span>设置</span>
+            <button class="header-btn" style="font-weight: 600;" onclick="saveGlobalSettings()">完成</button>
+        </div>
+
+        <div class="settings-container">
+            
+            <!-- 区域一：连接设置 -->
+            <div class="settings-group-title" style="margin: 20px 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">连接设置 (API Settings)</div>
+            <div class="settings-group">
+                <div class="input-row" style="padding-bottom: 45px;">
+                    <label>接口地址 (API Address)</label>
+                    <input type="text" id="setting-endpoint" placeholder="例如 http://127.0.0.1:5000">
+                    <button class="connect-btn" id="connect-btn" onclick="fetchModels()">📡 连接检查 & 拉取</button>
+                </div>
+                <div class="input-row">
+                    <label>API Key</label>
+                    <input type="password" id="setting-apikey" placeholder="sk-xxxxxx (内容隐藏)">
+                </div>
+                <div class="input-row">
+                    <label>模型名称 (Model Name)</label>
+                    <div id="model-selector-container">
+                        <input type="text" id="setting-model" placeholder="先拉取，或手动输入">
+                    </div>
+                </div>
+                <div class="input-row" style="padding: 12px 0; text-align: center; color: #007aff; cursor: pointer; font-weight: 600;" onclick="saveGlobalSettings()">
+                    保存配置
+                </div>
+            </div>
+
+            <!-- 区域二：数据管理 -->
+            <div class="settings-group-title" style="margin: 20px 0 10px 15px; font-size: 14px; color: #666; text-transform: uppercase;">数据管理 (Data Management)</div>
+            <div style="margin: 0 15px 10px; font-size: 13px; color: #8e8e93;">
+                备份或恢复你的所有角色和聊天记录。
+            </div>
+            <div class="settings-group">
+                <div class="input-row" style="padding: 12px 15px; cursor: pointer; color: #007aff; text-align: center;" onclick="exportData()">
+                    📤 导出数据备份 (Export)
+                </div>
+                <div class="input-row" style="padding: 12px 15px; cursor: pointer; color: #007aff; text-align: center; border-top: 1px solid #e5e5ea;" onclick="document.getElementById('backup-import-input-settings').click()">
+                    📥 导入备份文件 (Import)
+                </div>
+            </div>
+            <input type="file" id="backup-import-input-settings" accept=".json" style="display: none;">
+
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
