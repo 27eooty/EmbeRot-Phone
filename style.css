@@ -46,10 +46,10 @@ body {
     background-size: cover;
     color: white;
     /* 移除 padding-bottom，因为 Dock 是悬浮的 */
-    display: flex;
-    flex-direction: column;
+    /* display: flex;  <-- 移除：交由 .page.active-home 控制 */
+    /* flex-direction: column; <-- 移除：交由 .page 控制 */
     /* 修复 Dock 定位问题 */
-    position: relative;
+    /* position: relative; <-- 移除：统一使用 .page 的 absolute */
     height: 100dvh;
 }
 
